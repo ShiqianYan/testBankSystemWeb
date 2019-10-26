@@ -425,4 +425,19 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("GET /rate", () => {
+        it('should return the rate', done => {
+            request(server)
+                .get('/rate')
+                .end((err, res) => {
+                    expect(res.body[0]).to.include({
+                        "fromEURtoCNY": 7.83,
+                        "fromCNYtoEUR": 0.13,
+                        "fromEURtoUSD": 1.11,
+                        "fromUSDtoEUR": 0.9
+                    });
+                    done(err)
+                })
+        });
+    })
 })
