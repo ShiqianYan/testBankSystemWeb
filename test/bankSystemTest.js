@@ -125,4 +125,35 @@ describe("bankSystemWeb", () => {
                 })
         })
     })
+    describe("DELETE /user/:id", () => {
+        describe("When the id is valid", () => {
+            it('should return the confirmation message and delete the user', () => {
+                return request(server)
+                    .delete(`/user/${validID}`)
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "User Deleted Successfully"
+                        })
+                    })
+            });
+            after(() => {
+                return request(server)
+                    .get('/user')
+                    .then(res => {
+                        expect(res.body.length).equals(4);
+                    })
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .delete("/user/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "User Not Deleted"
+                        })
+                    })
+            });
+        })
+    })
 })
