@@ -245,4 +245,22 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("GET /cardVUN/:userName", () => {
+        it('should return the card', done => {
+            request(server)
+                .get('/cardVUN/876212493@gmail.com')
+                .set("Accept", "application/json")
+                .expect("Content-Type", /json/)
+                .end((err, res) => {
+                    expect(res.body).to.deep.include({
+                        _id: "5db367af1c9d4400005ea2e9",
+                        cardNumber: "2356876065282137",
+                        EURBalance: 1300,
+                        CNYBalance: 900,
+                        password: "245032"
+                    })
+                    done(err)
+                })
+        });
+    })
 })
