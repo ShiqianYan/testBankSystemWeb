@@ -321,4 +321,52 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("PUT /card/save/:id", () => {
+        describe("When the id is valid", () => {
+            describe("When the password is valid", () => {
+                it('should return the confirmation message and save the money', () => {
+                    let money = {
+                        amount: 100,
+                        password: "123456"
+                    };
+                    return request(server)
+                        .put('/card/save/5db343801c9d4400005ea2d1')
+                        .send(money)
+                        .then(res => {
+                            expect(res.body).to.include({
+                                "message": "Money Saved Successfully"
+                            })
+                        })
+                });
+                after(() => {
+                    return request(server)
+                        .get('/card/5db343801c9d4400005ea2d1')
+                        .then(res => {
+                            expect(res.body.EURBalance).equals(1400);
+                        })
+                })
+            })
+            describe("When the password is invalid", () => {
+                it('should return a confirmation message', () => {
+                    return request(server)
+                        .put('/card/save/5db343801c9d4400005ea2d1')
+                        .send({amount: 100, password: "325253"})
+                        .then(res => {
+                            expect(res.body.message).equals("Invalid Password");
+                        })
+                });
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .put("/card/save/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Not Found"
+                        })
+                    })
+            });
+        })
+    })
 })
