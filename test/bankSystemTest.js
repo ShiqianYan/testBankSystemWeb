@@ -210,4 +210,39 @@ describe("bankSystemWeb", () => {
                 })
         });
     })
+    describe("GET /card/:id", () => {
+        describe("When the id is valid", () => {
+            it('should return the specific card', done => {
+                request(server)
+                    .get('/card/5db3433c1c9d4400005ea2cf')
+                    .set("Accept", "application/json")
+                    .expect("Content-Type", /json/)
+                    .end((err, res) => {
+                        expect(res.body).to.deep.include({
+                            _id: "5db3433c1c9d4400005ea2cf",
+                            cardNumber: "3827305806378854",
+                            EURBalance: 91,
+                            CNYBalance: 300,
+                            password: "786215"
+                        })
+                        done(err)
+                    })
+            });
+        })
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', done => {
+                request(server)
+                    .get('/card/1243314314')
+                    .set("Accept", "application/json")
+                    .expect("Content-Type", /json/)
+                    .end((err, res) => {
+                        expect(res.body).to.deep.include({
+                            "message": "Card Not Found"
+                        })
+                        done(err)
+                    })
+
+            });
+        })
+    })
 })
