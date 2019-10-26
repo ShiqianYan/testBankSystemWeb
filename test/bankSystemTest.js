@@ -497,4 +497,61 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("PUT /card/settle/:id", () => {
+        describe("When the id is valid", () => {
+            describe("When the password is valid", () => {
+                describe("When the balance is sufficient", () => {
+                    it('should return the confirmation message and settle CNY', () => {
+                        return request(server)
+                            .put('/card/settle/5db343801c9d4400005ea2d1')
+                            .send({amount: 800, password: "123456"})
+                            .then(res => {
+                                expect(res.body).to.include({
+                                    "message": "Foreign Exchange Settled Successfully"
+                                })
+                            })
+                    });
+                    after(() => {
+                        return request(server)
+                            .get('/card/5db343801c9d4400005ea2d1')
+                            .then(res => {
+                                expect(res.body.EURBalance).equals(1300);
+                                expect(res.body.CNYBalance).equals(1283);
+                            })
+                    })
+                })
+                describe("When the balance is insufficient", () => {
+                    it('should return a confirmation message', () => {
+                        return request(server)
+                            .put('/card/settle/5db343801c9d4400005ea2d1')
+                            .send({amount: 4000, password: "123456"})
+                            .then(res => {
+                                expect(res.body.message).equals("Insufficient CNY Balance")
+                            })
+                    });
+                })
+            })
+            describe("When the password is invalid", () => {
+                it('should return a confirmation message', () => {
+                    return request(server)
+                        .put('/card/settle/5db343801c9d4400005ea2d1')
+                        .send({amount: 100, password: "325253"})
+                        .then(res => {
+                            expect(res.body.message).equals("Invalid Password");
+                        })
+                });
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .put("/card/settle/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Not Found"
+                        })
+                    })
+            });
+        })
+    })
 })
