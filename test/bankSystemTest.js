@@ -61,4 +61,39 @@ describe("bankSystemWeb", () => {
                 })
         });
     })
+    describe("GET /user/:id", () => {
+        describe("When the id is valid", () => {
+            it('should return the specific user', done => {
+                request(server)
+                    .get('/user/5db3307c1c9d440000ff784b')
+                    .set("Accept", "application/json")
+                    .expect("Content-Type", /json/)
+                    .end((err, res) => {
+                        expect(res.body).to.deep.include({
+                            _id: "5db3307c1c9d440000ff784b",
+                            name: "Camille",
+                            userName: "876212493@gmail.com",
+                            cardNumber: "2356876065282137",
+                            phoneNumber: "0892347642"
+                        })
+                        done(err)
+                    })
+            });
+        })
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', done => {
+                request(server)
+                    .get('/user/1243314314')
+                    .set("Accept", "application/json")
+                    .expect("Content-Type", /json/)
+                    .end((err, res) => {
+                        expect(res.body).to.deep.include({
+                            "message": "User Not Found"
+                        })
+                        done(err)
+                    })
+
+            });
+        })
+    })
 })
