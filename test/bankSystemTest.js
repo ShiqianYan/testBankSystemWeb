@@ -263,4 +263,31 @@ describe("bankSystemWeb", () => {
                 })
         });
     })
+    describe("POST /card", () => {
+        it('should return confirmation message and update database', () => {
+            const card = {
+                cardNumber: "9729383298302332",
+                password: "532911"
+            };
+            return request(server)
+                .post('/card')
+                .send(card)
+                .then(res => {
+                    expect(res.body.message).equals("Card Added Successfully");
+                    validID = res.body.data._id
+                })
+        });
+        after(() => {
+            return request(server)
+                .get(`/card/${validID}`)
+                .then(res => {
+                    expect(res.body).to.deep.include({
+                        cardNumber: "9729383298302332",
+                        EURBalance: 0,
+                        CNYBalance: 0,
+                        password: "532911"
+                    })
+                })
+        })
+    })
 })
