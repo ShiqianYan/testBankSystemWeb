@@ -290,4 +290,35 @@ describe("bankSystemWeb", () => {
                 })
         })
     })
+    describe("DELETE /card/:id", () => {
+        describe("When the id is valid", () => {
+            it('should return the confirmation message and delete the card', () => {
+                return request(server)
+                    .delete(`/card/${validID}`)
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Deleted Successfully"
+                        })
+                    })
+            });
+            after(() => {
+                return request(server)
+                    .get('/card')
+                    .then(res => {
+                        expect(res.body.length).equals(4);
+                    })
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .delete("/card/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Not Deleted"
+                        })
+                    })
+            });
+        })
+    })
 })
