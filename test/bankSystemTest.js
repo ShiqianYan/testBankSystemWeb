@@ -96,4 +96,33 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("POST /user", () => {
+        it('should return confirmation message and update database', function () {
+            const user = {
+                name: "Apple",
+                userName: "32325323@wit.ie",
+                cardNumber: "9729383298302332",
+                phoneNumber: "0295308720"
+            };
+            return request(server)
+                .post('/user')
+                .send(user)
+                .then(res => {
+                    expect(res.body.message).equals("User Added Successfully");
+                    validID = res.body.data._id
+                })
+        });
+        after(() => {
+            return request(server)
+                .get(`/user/${validID}`)
+                .then(res => {
+                    expect(res.body).to.deep.include({
+                        name: "Apple",
+                        userName: "32325323@wit.ie",
+                        cardNumber: "9729383298302332",
+                        phoneNumber: "0295308720"
+                    })
+                })
+        })
+    })
 })
