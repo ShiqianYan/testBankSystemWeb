@@ -156,4 +156,58 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("GET /card", () => {
+        it('should return all cards', done => {
+            request(server)
+                .get("/card")
+                .set("Accept", "application/json")
+                .expect("Content-Type", /json/)
+                .end((err, res) => {
+                    try {
+                        expect(res.body).to.be.a("array")
+                        expect(res.body.length).to.equal(4)
+                        let result = _.map(res.body, card => {
+                            return {
+                                _id: card._id,
+                                cardNumber: card.cardNumber,
+                                EURBalance: card.EURBalance,
+                                CNYBalance: card.CNYBalance,
+                                password: card.password
+                            }
+                        })
+                        expect(result).to.deep.include({
+                            _id: "5db367af1c9d4400005ea2e9",
+                            cardNumber: "2356876065282137",
+                            EURBalance: 1300,
+                            CNYBalance: 900,
+                            password: "245032"
+                        });
+                        expect(result).to.deep.include({
+                            _id: "5db343801c9d4400005ea2d1",
+                            cardNumber: "0948447639175421",
+                            EURBalance: 1300,
+                            CNYBalance: 1283,
+                            password: "123456"
+                        });
+                        expect(result).to.deep.include({
+                            _id: "5db343ad1c9d4400005ea2d3",
+                            cardNumber: "6750426952807546",
+                            EURBalance: 1000,
+                            CNYBalance: 900,
+                            password: "123422"
+                        });
+                        expect(result).to.deep.include({
+                            _id: "5db3433c1c9d4400005ea2cf",
+                            cardNumber: "3827305806378854",
+                            EURBalance: 91,
+                            CNYBalance: 300,
+                            password: "786215"
+                        });
+                        done()
+                    } catch (e) {
+                        done(e)
+                    }
+                })
+        });
+    })
 })
