@@ -369,4 +369,60 @@ describe("bankSystemWeb", () => {
             });
         })
     })
+    describe("PUT /card/withdraw/:id", () => {
+        describe("When the id is valid", () => {
+            describe("When the password is valid", () => {
+                describe("When the balance is sufficient", () => {
+                    it('should return the confirmation message and withdraw the money', () => {
+                        return request(server)
+                            .put('/card/withdraw/5db343801c9d4400005ea2d1')
+                            .send({amount: 100, password: "123456"})
+                            .then(res => {
+                                expect(res.body).to.include({
+                                    "message": "Money Withdrew Successfully"
+                                })
+                            })
+                    });
+                    after(() => {
+                        return request(server)
+                            .get('/card/5db343801c9d4400005ea2d1')
+                            .then(res => {
+                                expect(res.body.EURBalance).equals(1300);
+                            })
+                    })
+                })
+                describe("When the balance is insufficient", () => {
+                    it('should return a confirmation message', () => {
+                        return request(server)
+                            .put('/card/withdraw/5db343801c9d4400005ea2d1')
+                            .send({amount: 4000, password: "123456"})
+                            .then(res => {
+                                expect(res.body.message).equals("Insufficient Balance")
+                            })
+                    });
+                })
+            })
+            describe("When the password is invalid", () => {
+                it('should return a confirmation message', () => {
+                    return request(server)
+                        .put('/card/withdraw/5db343801c9d4400005ea2d1')
+                        .send({amount: 100, password: "325253"})
+                        .then(res => {
+                            expect(res.body.message).equals("Invalid Password");
+                        })
+                });
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .put("/card/withdraw/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Not Found"
+                        })
+                    })
+            });
+        })
+    })
 })
