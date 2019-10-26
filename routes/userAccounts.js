@@ -181,7 +181,7 @@ router.getRate = (req, res) => {
 router.purchaseCNYForEx = (req, res) => {
     cardInfo.findById(req.params.id, function (err, card) {
         if (err)
-            res.send(err);
+            res.send({"message": "Card Not Found", err});
         else {
             if (req.body.password !== card.password)
                 res.send({"message": "Invalid Password"});
@@ -199,7 +199,7 @@ router.purchaseCNYForEx = (req, res) => {
                                     if (err)
                                         res.send(err);
                                     else {
-                                        res.send({"message": "foreign Exchange Purchased Successfully", card});
+                                        res.send({"message": "Foreign Exchange Purchased Successfully", card});
                                     }
                                 })
                             }
@@ -214,7 +214,7 @@ router.purchaseCNYForEx = (req, res) => {
 router.settleForEx = (req, res) => {
     cardInfo.findById(req.params.id, function (err, card) {
         if (err)
-            res.send(err);
+            res.send({"message": "Card Not Found", err});
         else {
             if (req.body.password !== card.password)
                 res.send({"message": "Invalid Password"});
@@ -232,7 +232,7 @@ router.settleForEx = (req, res) => {
                                     if (err)
                                         res.send(err);
                                     else {
-                                        res.send({"message": "foreign Exchange Settled Successfully", card});
+                                        res.send({"message": "Foreign Exchange Settled Successfully", card});
                                     }
                                 })
                             }

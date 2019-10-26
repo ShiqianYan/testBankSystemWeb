@@ -431,13 +431,70 @@ describe("bankSystemWeb", () => {
                 .get('/rate')
                 .end((err, res) => {
                     expect(res.body[0]).to.include({
-                        "fromEURtoCNY": 7.83,
-                        "fromCNYtoEUR": 0.13,
+                        "fromEURtoCNY": 8,
+                        "fromCNYtoEUR": 0.125,
                         "fromEURtoUSD": 1.11,
                         "fromUSDtoEUR": 0.9
                     });
                     done(err)
                 })
         });
+    })
+    describe("PUT /card/purchase/:id", () => {
+        describe("When the id is valid", () => {
+            describe("When the password is valid", () => {
+                describe("When the balance is sufficient", () => {
+                    it('should return the confirmation message and purchase CNY', () => {
+                        return request(server)
+                            .put('/card/purchase/5db343801c9d4400005ea2d1')
+                            .send({amount: 100, password: "123456"})
+                            .then(res => {
+                                expect(res.body).to.include({
+                                    "message": "Foreign Exchange Purchased Successfully"
+                                })
+                            })
+                    });
+                    after(() => {
+                        return request(server)
+                            .get('/card/5db343801c9d4400005ea2d1')
+                            .then(res => {
+                                expect(res.body.EURBalance).equals(1200);
+                                expect(res.body.CNYBalance).equals(2083);
+                            })
+                    })
+                })
+                describe("When the balance is insufficient", () => {
+                    it('should return a confirmation message', () => {
+                        return request(server)
+                            .put('/card/purchase/5db343801c9d4400005ea2d1')
+                            .send({amount: 4000, password: "123456"})
+                            .then(res => {
+                                expect(res.body.message).equals("Insufficient EUR Balance")
+                            })
+                    });
+                })
+            })
+            describe("When the password is invalid", () => {
+                it('should return a confirmation message', () => {
+                    return request(server)
+                        .put('/card/purchase/5db343801c9d4400005ea2d1')
+                        .send({amount: 100, password: "325253"})
+                        .then(res => {
+                            expect(res.body.message).equals("Invalid Password");
+                        })
+                });
+            })
+        });
+        describe("When the id is invalid", () => {
+            it('should return the Not Found message', () => {
+                return request(server)
+                    .put("/card/purchase/12433142314")
+                    .then(res => {
+                        expect(res.body).to.include({
+                            "message": "Card Not Found"
+                        })
+                    })
+            });
+        })
     })
 })
