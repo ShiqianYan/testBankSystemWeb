@@ -1,2 +1,3 @@
 file:
   - ./test/functional/api/bankSystemTest.js
+require: '@babel/register'

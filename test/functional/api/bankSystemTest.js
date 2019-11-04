@@ -1,4 +1,4 @@
-const chai = require("chai")
+import chai from "chai"
 const server = require("../../../bin/www")
 const expect = chai.expect
 const request = require("supertest")

@@ -1,9 +1,9 @@
 /*eslint no-console: "off" */
-const userInfo = require("../models/userInfo")
+import userInfo from "../models/userInfo"
 const exchangeRate = require("../models/exchangeRate")
 const cardInfo = require("../models/cardInfo")
 const mongoose = require("mongoose")
-const express = require("express")
+import express from "express"
 const router = express.Router()
 
 let mongodbUri = "mongodb+srv://ShiqianYan:yan15937@banksystemweb-yx34e.mongodb.net/bankSystemWeb?retryWrites=true&w=majority"

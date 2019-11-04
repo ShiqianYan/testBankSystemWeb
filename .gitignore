@@ -2,8 +2,8 @@
 /**/.DS_S*
 .DS_S*
 *.log
-/routes/userAccounts.js
 /README.txt
 /test.txt
-/coverage
 /.nyc_output
+/coverage
+/dist
