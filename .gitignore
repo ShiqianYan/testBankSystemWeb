@@ -3,3 +3,5 @@
 .DS_S*
 *.log
 /routes/userAccounts.js
+/README.txt
+/test.txt
