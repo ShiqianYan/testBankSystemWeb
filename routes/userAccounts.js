@@ -1,3 +1,4 @@
+/*eslint no-console: "off" */
 const userInfo = require("../models/userInfo")
 const exchangeRate = require("../models/exchangeRate")
 const cardInfo = require("../models/cardInfo")
