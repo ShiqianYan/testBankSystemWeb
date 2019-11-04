@@ -5,3 +5,5 @@
 /routes/userAccounts.js
 /README.txt
 /test.txt
+/coverage
+/.nyc_output
