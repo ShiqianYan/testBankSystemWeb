@@ -72,7 +72,7 @@ router.findAllCards = (req, res) => {
     if (err)
       res.send(err)
     else
-      res.send(JSON.stringify(card, null, 5))
+      res.send(card)
   })
 }
 
