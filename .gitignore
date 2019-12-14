@@ -7,4 +7,7 @@
 /.nyc_output
 /coverage
 /dist
+<<<<<<< HEAD
 /.idea
+=======
+>>>>>>> bc0bcdca4931f207dc4d2be343df828e5a3b78ae
