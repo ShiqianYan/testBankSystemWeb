@@ -4,6 +4,7 @@ let express = require("express")
 let path = require("path")
 let cookieParser = require("cookie-parser")
 let logger = require("morgan")
+let cors = require("cors")
 
 let indexRouter = require("./routes/index")
 let usersRouter = require("./routes/users")
@@ -15,6 +16,8 @@ let app = express()
 // view engine setup
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
+
+app.use(cors())
 
 app.use(logger("dev"))
 app.use(express.json())
@@ -31,6 +34,7 @@ app.get("/rate", userAccounts.getRate)
 app.get("/card", userAccounts.findAllCards)
 app.get("/card/:id", userAccounts.findOneCard)
 app.get("/cardVUN/:userName", userAccounts.findCardViaUserName)
+app.get("/userVUN/:userName", userAccounts.findUserPasswordViaUserName)
 
 app.post("/user", userAccounts.addUser)
 app.post("/card", userAccounts.addCard)

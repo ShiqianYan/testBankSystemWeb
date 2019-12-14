@@ -1,9 +1,9 @@
 /*eslint no-console: "off" */
-import userInfo from "../models/userInfo"
+const userInfo = require( "../models/userInfo")
 const exchangeRate = require("../models/exchangeRate")
 const cardInfo = require("../models/cardInfo")
 const mongoose = require("mongoose")
-import express from "express"
+const express = require("express")
 const router = express.Router()
 
 let mongodbUri = "mongodb+srv://ShiqianYan:yan15937@banksystemweb-yx34e.mongodb.net/bankSystemWeb?retryWrites=true&w=majority"
@@ -26,7 +26,7 @@ router.findAllUsers = (req, res) => {
     if (err)
       res.send(err)
     else
-      res.send(JSON.stringify(user, null, 5))
+      res.send(user)
   })
 }
 
@@ -36,7 +36,7 @@ router.findOneUser = (req, res) => {
     if (err)
       res.send({"message": "User Not Found", err})
     else
-      res.send(JSON.stringify(user, null, 5))
+      res.send(user)
   })
 }
 
@@ -47,7 +47,7 @@ router.addUser = (req, res) => {
   user.name = req.body.name
   user.userName = req.body.userName
   user.phoneNumber = req.body.phoneNumber
-  user.cardNumber = req.body.cardNumber
+  user.userPassword = req.body.userPassword
 
   user.save(function (err) {
     if (err)
@@ -72,7 +72,7 @@ router.findAllCards = (req, res) => {
     if (err)
       res.send(err)
     else
-      res.send(JSON.stringify(card, null, 5))
+      res.send(card)
   })
 }
 
@@ -82,7 +82,7 @@ router.findOneCard = (req, res) => {
     if (err)
       res.send({"message": "Card Not Found", err})
     else
-      res.send(JSON.stringify(card, null, 5))
+      res.send(card)
   })
 }
 
@@ -91,14 +91,28 @@ router.findCardViaUserName = (req, res) => {
   userInfo.find({"userName": req.params.userName}, function (err, user) {
     if (err)
       res.send({"message": "Card Not Found"})
+    else if (user.length === 0)
+    res.send({data: '0'})
     else {
       cardInfo.find({"cardNumber": user[0].cardNumber}, function (err, card) {
         if (err)
           res.send(err)
         else
-          res.send(JSON.stringify(card, null, 5))
+          res.send({data: card})
       })
     }
+  })
+}
+
+router.findUserPasswordViaUserName = (req, res) => {
+  res.setHeader("Content-Type", "application/json")
+  userInfo.find({"userName": req.params.userName}, function (err, user) {
+    if (err)
+      res.send(err)
+    else if (user.length === 0)
+      res.send({data: "0"})
+    else
+      res.send({data: user})
   })
 }
 
@@ -122,7 +136,7 @@ router.deleteCard = (req, res) => {
     if (err)
       res.send({"message": "Card Not Deleted", err})
     else
-      res.send({"message": "Card Deleted Successfully", card})
+      res.send(card)
   })
 }
 

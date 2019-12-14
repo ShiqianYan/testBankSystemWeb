@@ -4,7 +4,8 @@ let userSchema = new mongoose.Schema({
   name: String,
   userName: String,
   cardNumber: String,
-  phoneNumber: String
+  phoneNumber: String,
+  userPassword: String
 },
 {collection: "userInfo"})
 
